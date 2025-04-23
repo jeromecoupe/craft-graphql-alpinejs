@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0" />
+    <title>Test Alpine and Craft CMS</title>
+    <style>
+      [x-cloak] {
+        display: none !important;
+      }
+    </style>
+    <script
+      type="module"
+      src="/dist/js/app.js"></script>
+  </head>
+  <body>
+    <h1>Testing this</h1>
+    <div
+      x-data="resources"
+      x-effect="getResources()"
+      x-cloak>
+      <form
+        @submit.prevent
+        method="get">
+        <h2>Search</h2>
+        <input
+          type="search"
+          x-model.debounce="searchQuery" />
+
+        <p x-show="categories.length === 0">loading categories</p>
+        <ul x-show="categories.length > 0">
+          <template
+            x-for="item in categories"
+            :key="item.id">
+            <li>
+              <label>
+                <input
+                  type="checkbox"
+                  :value="item.id"
+                  @change="currentPage = 1"
+                  x-model="checkedCategoriesIds" />
+                <span x-text="item.title"></span>
+              </label>
+            </li>
+          </template>
+        </ul>
+      </form>
+
+      <h2>Resources</h2>
+
+      <p x-show="resources.length === 0">No ressources found</p>
+
+      <div x-show="resources.length > 0">
+        <p>
+          <span x-text="totalCount"></span>
+          resources found /
+          <span x-text="totalResources"></span>
+        </p>
+        <ul>
+          <template
+            x-for="item in resources"
+            :key="item.id">
+            <li>
+              <article>
+                <p x-text="item.resourceType[0].title"></p>
+                <h2>
+                  <a
+                    :href="item.commonUrl"
+                    x-text="item.title"></a>
+                </h2>
+                <p x-text="item.commonSummary"></p>
+              </article>
+            </li>
+          </template>
+        </ul>
+        <p>
+          <button
+            @click="prevPage()"
+            :disabled="currentPage === 1">
+            Previous
+          </button>
+          <button
+            @click="nextPage()"
+            :disabled="currentPage === totalPages">
+            Next
+          </button>
+          Page
+          <span x-text="currentPage"></span>
+          of
+          <span x-text="totalPages"></span>
+        </p>
+      </div>
+    </div>
+  </body>
+</html>
